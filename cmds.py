@@ -23,26 +23,6 @@ async def cmds(ctx): # Help command
         cmds = f.read()
     await ctx.send("__**InterMSA Bot Commands:**__```CSS\n" + cmds + "```")
 
-# Debug bot
-@bot.command()
-async def debug(ctx, *args):
-  with open("debug.txt") as f:
-    status = f.read()
-  if args[0] == "start" and status != "start":
-    with open("debug.txt", 'w') as f:
-      f.write("start")
-    status = "start"
-    while status == "start":
-        await ctx.send("`Discord Bot Live`", delete_after=3600)
-        with open("debug.txt") as f:
-          status = f.read()
-        await asyncio.sleep(3600)
-  elif args[0] == "stop" and status != "stop":
-    with open("debug.txt", 'w') as f:
-      f.write("stop")
-  else:
-    await ctx.send(f"Debug Status: `{status}`", delete_after=25)
-
 @bot.command()
 async def showroles(ctx, *args):
     with open("role_selection.txt", 'r', encoding="utf-8") as f:
@@ -122,20 +102,6 @@ async def add(ctx, *args):
          siblinghood = get_sibling(sibling)
          channel = bot.get_channel(siblinghood.general)
          await channel.send("<@!" + user_id.group() + "> *has* ***officially*** *joined the InterMSA Discord! Welcome your fellow " + sibling + "!*")
-         read = []
-         if ctx.channel.id == PROS.wait: # Check if in #introductions chat
-            channel = bot.get_channel(INTROS_ID)
-            with open("introductions.txt") as f:
-               for line in f.readlines():
-                  entry = line.strip('\n').split(' ')
-                  if entry[0] == user_id.group():
-                     msg_id = int(entry[1])
-                     msg = await channel.fetch_message(msg_id)
-                     await msg.delete()
-                     read.append(f"{user_id.group()} {msg_id}")
-            await ctx.message.delete()
-            for old_msg in read: # Flush msg deletions
-               edit_file("introductions.txt", old_msg)
       else:
          await ctx.send("**Invalid command! Please make sure you're @ing the user.**", delete_after=25)
          await ctx.message.delete(delay=300)

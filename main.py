@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 '''
+بسم الله
 Author: David J. Morfe
 Application Name: MSA-Bot
 Functionality Purpose: An agile Discord Bot to fit any MSA's needs
 '''
-RELEASE = "v0.0.1 - 4/2/21"
+RELEASE = "v0.0.1 - 4/3/21"
 
 
 import re, os, sys, time, json, datetime
@@ -80,11 +81,7 @@ async def on_raw_reaction_remove(payload):
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
-        return -1;    
-    # Exclusive Experimental Commands
-    if message.content == 'nu u':
-        if "Cali#6919" == str(message.author):
-            await message.channel.send("nu u!")
+        return -1;
     if message.content.lower().startswith('/version'):
         if message.author.id in DEVS:
             await message.channel.send(f"`{RELEASE} | {LAST_MODIFIED}`")

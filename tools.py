@@ -6,19 +6,11 @@ from email.message import EmailMessage
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from config import *
-try:
-    import GeoLiberator as GeoLib
-except ModuleNotFoundError:
-    pass
 # (Note: All variables not declared probably came from config.py)
 
 
 #If email treated as spam:
  #https://support.google.com/mail/contact/bulk_send_new?rd=1
-#Print Emojis Safely
- #print(u'\U0001f604'.encode('unicode-escape'))
- #print('\N{grinning face with smiling eyes}')
-#Make way to update #role-selection
 
 
 DB_CONN = sql.connect(DB_PATH)
@@ -50,12 +42,12 @@ def send_email(addr: str, test=False) -> str:
     <i><u>#verify</u></i> text channel of your InterMSA Discord. \
     This code will expire in 15 minutes.</body></html>", subtype="html")
         msg["Subject"] = "Verification Code for InterMSA Discord"
-        msg["From"] = "no-reply@intermsa.com"
+        msg["From"] = EMAIL
         msg["To"] = addr
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-                s.login("intermuslimstudentassociation@gmail.com",
-                        APP_PASS)
-                s.send_message(msg)
+            s.login("muslimstudentassociation@gmail.com",
+                    APP_PASS)
+            s.send_message(msg)
     else:
         print(sCode)
     return sCode
@@ -137,12 +129,6 @@ def listen_announce(msg):
     elif msg.channel.id == SISTERS.announce:
         if "@everyone" in msg.content:
             return BROTHERS.announce
-    elif msg.channel.id == BROTHERS.events:
-        if "@everyone" in msg.content:
-            return SISTERS.events
-    elif msg.channel.id == SISTERS.events:
-        if "@everyone" in msg.content:
-            return BROTHERS.events
     else:
         False
 
@@ -199,11 +185,6 @@ def in_general(channel_id):
         return SISTERS
     else:
         return False
-
-# Dynamically mute/unmute every member in a voice channel
-async def mute_voice_members(voice_channel, mute=True):
-    for member in voice_channel.members:
-        await member.edit(mute=mute)
 
 # Constantly check for changes in verify.txt
 async def check_verify(record, msg, temp):
