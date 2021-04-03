@@ -5,7 +5,7 @@ Author: David J. Morfe
 Application Name: MSA-Bot
 Functionality Purpose: An agile Discord Bot to fit any MSA's needs
 '''
-RELEASE = "v0.0.1 - 4/3/21"
+RELEASE = "v0.0.2 - 4/3/21"
 
 
 import re, os, sys, time, json, datetime
@@ -77,7 +77,7 @@ async def on_raw_reaction_remove(payload):
         except AttributeError:
             return -1
 
-# Standard InterMSA Bot Commands
+# Standard MSA Bot Commands
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -107,20 +107,20 @@ async def on_message(message):
     # Verification System
     if listen_verify(message): # Verify command
         sid, gender = listen_verify(message)
-        if not re.search(r"^.+@.+\.", sid) or \
+        if not re.search(r"^[a-zA-Z]{2,4}\d{0,4}$", sid) or \
            not re.search(r"^/verify ", str(message.content)) or \
            sid == '':
             await message.channel.send("**Invalid command! Please make sure you're typing everything correctly.**", delete_after=25)
             await message.delete(delay=300)
-        elif not re.search(r"(Brother|Sister|Professional)", gender):
+        elif not re.search(r"(Brother|Sister)", gender):
             await message.channel.send("**Invalid command! Are you a brother, sister or workforce?**", delete_after=25)
             await message.delete(delay=300)
         elif re.search(r"\d{8}", message.content):
             await message.channel.send("**Invalid command! NOT your student ID, use your UCID!**", delete_after=25)
             await message.delete(delay=300)
         else:
-            sid = sid.lower()
-            vCode = send_sid(sid, test=TEST_MODE); ID = message.author.id
+            sid_email = sid.lower() + "@" + MSA.lower() + ".edu"
+            vCode = send_email(sid_email, test=TEST_MODE); ID = message.author.id
             with open("verify.txt", 'a') as f:
                 f.write(f"{vCode} {sid} {ID} {gender}\n")
             temp = await message.channel.send(f"**We've sent a verification code to your sid at** ___{sid}___**, please copy & paste it below.**", delete_after=300)
@@ -143,21 +143,21 @@ async def on_message(message):
                         lst = line.strip('\n').split(' ')
                         if lst[0] == eCode.group() and lst[2] == str(message.author.id): # Verify code
                             edit_file("verify.txt", line.strip('\n'))
-                            role = discord.utils.get(client.get_guild(SERVER_ID).roles,
+                            role = get(bot.get_guild(SERVER_ID).roles,
                                                      name=f"{lst[3]}s Waiting Room")
                             await message.author.add_roles(role); flag = False
                             nName = get_name(lst[1])
                             sibling = get_sibling(lst[3])
                             await message.delete()
-                            if nName != None:
-                                try:
+                            try:
+                                if nName != None:
                                     await message.author.edit(nick=f"{nName}")
-                                except discord.errors.Forbidden:
-                                    print("Success!")
-                            else:
-                                await message.author.edit(nick=f"{lst[1]}")
-                            channel = client.get_channel(sibling.wait) # NJIT MSA #general
-                            await channel.send(f"@here ***" + message.author.mention + "***" + " *has joined the NJIT MSA Discord!*")
+                                else:
+                                    await message.author.edit(nick=f"{lst[1]}")
+                            except errors.Forbidden:
+                                print("Success!\n", nName)
+                            channel = bot.get_channel(sibling.wait) # NJIT MSA #general
+                            await channel.send(f"@here ***" + message.author.mention + "***" + f" *has joined the {MSA} MSA Discord!*")
                         else:
                             await message.delete(delay=60)
                     if flag:

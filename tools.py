@@ -39,13 +39,13 @@ def send_email(addr: str, test=False) -> str:
         msg.set_content(f"\
     <html><body><b>Your verification code to join the chat is below:<br><br>\
     <h2>{sCode}</h2></b>Please copy & paste this code in the \
-    <i><u>#verify</u></i> text channel of your InterMSA Discord. \
+    <i><u>#verify</u></i> text channel of your {MSA} MSA Discord. \
     This code will expire in 15 minutes.</body></html>", subtype="html")
-        msg["Subject"] = "Verification Code for InterMSA Discord"
+        msg["Subject"] = f"Verification Code for {MSA} MSA Discord"
         msg["From"] = EMAIL
         msg["To"] = addr
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-            s.login("muslimstudentassociation@gmail.com",
+            s.login(EMAIL,
                     APP_PASS)
             s.send_message(msg)
     else:
@@ -72,8 +72,6 @@ def decrypt(cipher_text):
 
 # Return full name string based on email
 def get_name(addr: str) -> str:
-    if "njit" not in addr:
-        return None
     sid = re.sub(r"@.+\.", '', str(addr))
     sid = sid.replace("edu", '')
     hashed_sid = hashlib.sha1(sid.encode()).hexdigest()
@@ -156,17 +154,13 @@ def listen_verify(msg):
     if msg.channel.id == VERIFY_ID:
         if msg.content.startswith('/verify'):
             request = re.sub(r"/verify ", '', msg.content.lower())
-            if '@' not in request:
-                return ('', '')
-            join_type = re.search(r"(brothers?|sis(tas?|ters?)|workforce)", request) or ''
+            join_type = re.search(r"(brothers?|sis(tas?|ters?))", request) or ''
             if join_type:
                 email = re.sub(fr"{join_type.group()}", '', request).strip(' ')
                 if join_type.group()[0] == 'b':
                     join_type = "Brother"
                 elif join_type.group()[0] == 's':
                     join_type = "Sister"
-                elif join_type.group()[0] == 'w':
-                    join_type = "Professional"
                 else:
                     join_type = ''
                 return email, join_type

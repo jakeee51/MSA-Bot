@@ -16,12 +16,12 @@ bot = commands.Bot(command_prefix='/', help_command=None, intents=intents)
 #client = discord.Client(intents=intents)
 
 
-# Extended InterMSA Bot Commands
+# Extended MSA Bot Commands
 @bot.command()
 async def cmds(ctx): # Help command
     with open("cmds.md") as f:
         cmds = f.read()
-    await ctx.send("__**InterMSA Bot Commands:**__```CSS\n" + cmds + "```")
+    await ctx.send("__**NJIT MSA Bot Commands:**__```CSS\n" + cmds + "```")
 
 @bot.command()
 async def showroles(ctx, *args):
@@ -75,7 +75,7 @@ async def add(ctx, *args):
          await member.remove_roles(rm_role)
          siblinghood = get_sibling(sibling)
          channel = bot.get_channel(siblinghood.general)
-         await channel.send("<@!" + user_id.group() + "> *has* ***officially*** *joined the InterMSA Discord! Welcome your " + sibling + "!*")
+         await channel.send("<@!" + user_id.group() + f"> *has* ***officially*** *joined the {MSA} MSA Discord! Welcome your " + sibling + "!*")
       else:
          await ctx.send("**Invalid command! Please make sure you're @ing the user.**", delete_after=25)
          await ctx.delete(delay=300)
@@ -101,7 +101,7 @@ async def add(ctx, *args):
          await member.remove_roles(rm_role)
          siblinghood = get_sibling(sibling)
          channel = bot.get_channel(siblinghood.general)
-         await channel.send("<@!" + user_id.group() + "> *has* ***officially*** *joined the InterMSA Discord! Welcome your fellow " + sibling + "!*")
+         await channel.send("<@!" + user_id.group() + f"> *has* ***officially*** *joined the {MSA} MSA Discord! Welcome your fellow " + sibling + "!*")
       else:
          await ctx.send("**Invalid command! Please make sure you're @ing the user.**", delete_after=25)
          await ctx.message.delete(delay=300)
@@ -117,14 +117,6 @@ async def timer(ctx, *args):
       await ctx.send(f"You will be notified in **" + args[0] + "** hour(s) & **" + args[1] + "** minute(s)!")
       await asyncio.sleep(eta)
       await ctx.send(ctx.author.mention + " **ALERT! YOUR TIMER HAS RUN OUT! DO WHAT YOU MUST!**")
-
-# GeoLiberator demo command
-@bot.command()
-async def GL(ctx, *, arg):
-   result = GeoLib.parse_address(arg, "full")
-   if result == "OTHER":
-      result = GeoLib.parse_address(arg, "address")
-   await ctx.send(str(result))
 
 
 # Sisters Exclusive Commands
