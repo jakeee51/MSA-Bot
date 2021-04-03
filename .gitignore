@@ -1,3 +1,6 @@
 
 *.pyc
 loot.txt
+credentials.json
+token.pickle
+loot2.txt
