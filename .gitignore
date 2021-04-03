@@ -4,3 +4,7 @@ loot.txt
 credentials.json
 token.pickle
 loot2.txt
+*.db
+database/database.db
+*.db
+database/database.db
