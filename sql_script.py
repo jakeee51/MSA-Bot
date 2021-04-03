@@ -35,6 +35,7 @@ def show_data(table):
    for row in sqlite_query(f"SELECT * FROM {table}"):
       if records <= 10:
          print(row)
+         #print(decrypt(row["email"]))
       records += 1
    if records == 0:
       print("Empty Table (no records)")
@@ -48,16 +49,18 @@ def show_data(table):
 ##conn.execute(query)
 
 '''INSERT'''
-populate_links(conn, "loot.txt")
+#populate_links(conn, "loot.txt")
 ##sid = hashlib.sha1("djm65".encode()).hexdigest()
 ##name = encrypt("David Jake Morfe")
 ##email = encrypt("djm65@njit.edu")
 ##query = "INSERT INTO Links(sid, full_name, email) VALUES(?,?,?)"
 ##sqlite_query(query, (sid, name, email))
 
-'''INSERT CHECK'''
+'''QUERY'''
+##sid = "djm65"
+##hashed_sid = hashlib.sha1(sid.encode()).hexdigest()
 ##query = "SELECT * FROM Links WHERE sid=?"
-##result = sqlite_query(query, (sid,), one=True)
+##result = sqlite_query(query, (hashed_sid,), one=True)
 ##print("Decrypted Result:", decrypt(result["full_name"]))
 
 '''UPDATE'''
