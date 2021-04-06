@@ -5,7 +5,7 @@ Author: David J. Morfe
 Application Name: MSA-Bot
 Functionality Purpose: An agile Discord Bot to fit any MSA's needs
 '''
-RELEASE = "v0.0.2 - 4/3/21"
+RELEASE = "v0.0.3 - 4/5/21"
 
 
 import re, os, sys, time, json, datetime
