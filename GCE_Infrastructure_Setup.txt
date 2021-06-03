@@ -6,8 +6,8 @@ root@msa-bot:/etc/systemd/system# history
     5  cd /etc/systemd/system
     6  touch botd.service
     7  nano botd.service # Create daemon service script with code provided below
-    8  systemctl daemon-reload
-    9  chmod 777 botd.service
+    8  chmod 777 botd.service
+    9  ls -l # Make sure all permissions are correct
    10  systemctl daemon-reload
    11  systemctl enable botd.service
    12  cd /home/username/
