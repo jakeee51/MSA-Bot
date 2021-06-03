@@ -8,23 +8,21 @@ root@msa-bot:/etc/systemd/system# history
     7  nano botd.service # Create daemon service script with code provided below
     8  chmod 777 botd.service
     9  ls -l # Make sure all permissions are correct
-   10  systemctl daemon-reload
-   11  systemctl enable botd.service
-   12  cd /home/username/
-   13  mkdir MSA-Bot/ # Drag contents of this Github Repo into this folder
-   14  chmod 777 -R *
-   15  cd MSA-Bot/
-   16  touch run.sh
-   17  chmod 777 run.sh
-   18  nano run.sh # Create run script with code provided below
-   19  chmod 777 *
-   20  ls -l # Make sure all permissions are correct
-   21  pip3 install -r requirements.txt
-   22  ./run.sh # Test to make sure bot starts up successfully
-   23  systemctl daemon-reload
-   24  systemctl enable botd
-   25  systemctl start botd
-   26  systemctl status botd # Bot setup should now be complete!
+   10  cd /home/username/
+   11  mkdir MSA-Bot/ # Drag contents of this Github Repo into this folder
+   12  chmod 777 -R *
+   13  cd MSA-Bot/
+   14  touch run.sh
+   15  chmod 777 run.sh
+   16  nano run.sh # Create run script with code provided below
+   17  chmod 777 *
+   18  ls -l # Make sure all permissions are correct
+   19  pip3 install -r requirements.txt
+   20  ./run.sh # Test to make sure bot starts up successfully
+   21  systemctl daemon-reload
+   22  systemctl enable botd
+   23  systemctl start botd
+   24  systemctl status botd # Bot setup should now be complete!
 
 
 root@msa-bot:/etc/systemd/system# cat botd.service
