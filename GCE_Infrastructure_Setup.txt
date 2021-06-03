@@ -1,0 +1,45 @@
+root@msa-bot:/etc/systemd/system# history
+    1  sudo apt update
+    2  sudo apt-get install python3-pip python-dev
+    3  sudo apt install man-db
+    4  sudo apt-get remove -y --purge man-db
+    5  cd /etc/systemd/system
+    6  touch botd.service
+    7  nano botd.service # Create daemon service script with code provided below
+    8  systemctl daemon-reload
+    9  chmod 777 botd.service
+   10  systemctl daemon-reload
+   11  systemctl enable botd.service
+   12  cd /home/username/
+   13  mkdir MSA-Bot/ # Drag contents of this Github Repo into this folder
+   14  chmod 777 -R *
+   15  cd MSA-Bot/
+   16  touch run.sh
+   17  chmod 777 run.sh
+   18  nano run.sh # Create run script with code provided below
+   19  chmod 777 *
+   20  ls -l # Make sure all permissions are correct
+   21  pip3 install -r requirements.txt
+   22  ./run.sh # Test to make sure bot starts up successfully
+   23  systemctl daemon-reload
+   24  systemctl enable botd
+   25  systemctl start botd
+   26  systemctl status botd # Bot setup should now be complete!
+
+
+root@msa-bot:/etc/systemd/system# cat botd.service
+[Unit]
+Description=Discord Bot Service
+
+[Service]
+WorkingDirectory=/home/username/MSA-Bot/
+ExecStart=/home/username/MSA-Bot/run.sh
+
+[Install]
+WantedBy=multi-user.target
+
+
+root@msa-bot:/etc/systemd/system# cat /home/username/MSA-Bot/run.sh
+#!/bin/bash
+echo "Discord Bot Live"
+python3 /home/username/MSA-Bot/main.py
