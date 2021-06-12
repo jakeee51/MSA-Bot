@@ -1,5 +1,4 @@
-import re
-from key import *
+import re, os
 
 class ServerPartition(object):
    #__slots__ = ("name", "wait", "general", "announce")
@@ -9,13 +8,6 @@ class ServerPartition(object):
       self.wait = wait
       self.general = general
       self.announce = announce
-
-class StaticMsg(object):
-   __slots__ = ("channel", "message", "reaction")
-   def __init__(self, channel, message, reaction):
-      self.channel = channel
-      self.message = message
-      self.reaction = reaction
 
 __bro_options = {"role_select": 792531850740498482}
 __sis_options = {"role_select": 792531967832227841}
@@ -42,36 +34,21 @@ BROTHERS = ServerPartition("Brother", 748745649746477086,
 SISTERS = ServerPartition("Sister", 748761869480624158,
                  748762901531066458, 748764105686384650,
                  **__sis_options)
-TEST_MODE = False; ENV = ENV; MSA = "NJIT"
-EMAIL = "noreply.njitmsa@gmail.com"
-BOT = os.getenv("BOT_SECRET", bot_pass())
-APP_PASS = os.getenv("EMAIL_SECRET", email_pass())
-SP = os.getenv("SECRET_PASS", secret_pass())
-DB_SECRET = re.sub(r"\\n", '\n', os.getenv("DB_SECRET", db_pass()))
-ENCRYPT_KEY = re.sub(r"\\n", '\n', os.getenv("PUBLIC_KEY", pub_pass()))
+TEST_MODE = False; ENV = "DEV"; MSA = "NJIT"
+EMAIL = ""
+APP_PASS = ""
+BOT = "NTc2OTUyMjc0MjA3NzY4NTc2.XNd-rQ.zYWb4wCl_cI5-kwptFlHUFAq5_E"
+SP = ""
+DB_SECRET = re.sub(r"\\n", '\n', "")
+ENCRYPT_KEY = re.sub(r"\\n", '\n', "")
 DB_PATH = "database/database.db"
 VERIFY_ID = 688625250832744449
 SERVER_ID = 630888887375364126
-ROLE_EMOJIS = {"\U0001f9d5": 750931950964965506,
-               "\N{BABY}": 750922989972750337,
-               "\N{GIRL}": 750923173956026438,
-               "\N{WOMAN}": 750923497101983795,
-               "\N{OLDER WOMAN}": 750923619634249740,
-               "\N{STRAIGHT RULER}": 756328774764593173,
-               "\N{DESKTOP COMPUTER}": 756329639588397197,
-               "\N{ATOM SYMBOL}": 756334778881540137,
-               "\N{TEST TUBE}": 756335021933068288,
-               "\N{OPEN BOOK}": 762052942302937111,
-               "\U0001f4f6": 783048947291258920,
-               "\U0001f9a0": 783049863243104296,
-               "\U0001f9be": 783050320552001587,
-               "\U0001f3d7": 783050450462703616,
-               "\U0001f4af": 778401907713638460,
-               "\U0001f310": 805947673043664919}
+ROLE_EMOJIS = {}
 SPLIT_ROLES_EMOJIS = {BROTHERS.role_select: {},
                       SISTERS.role_select: {}}
 DEVS = [233691753922691072]
-os.chdir(CWD) # Return to original directory
+#os.chdir(CWD) # Return to original directory
 update_role_select() # Update the role-selection listener upon startup
 
 '''
@@ -84,4 +61,7 @@ Notes:
   - Right click on #verify chat
   - Right click on #general chat
 - Make @everyone role only able to talk in #verify chat
+
+Make MSA-Bot ready for website automatic setup
+Make website that configures and download zip file of custom MSA bot
 '''

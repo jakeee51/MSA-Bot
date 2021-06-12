@@ -3,10 +3,9 @@ import re, os, time, yaml, smtplib
 import mysql.connector
 from random import randint
 from email.message import EmailMessage
-from key import db_pass, email_pass
 from config import *
-login = db_pass()
-app_pass = email_pass()
+login = DB_SECRET
+app_pass = APP_PASS
 
 #If email treated as spam:
  #https://support.google.com/mail/contact/bulk_send_new?rd=1
