@@ -37,7 +37,7 @@ SISTERS = ServerPartition("Sister", 748761869480624158,
 TEST_MODE = False; ENV = "DEV"; MSA = "NJIT"
 EMAIL = ""
 APP_PASS = ""
-BOT = "NTc2OTUyMjc0MjA3NzY4NTc2.XNd-rQ.zYWb4wCl_cI5-kwptFlHUFAq5_E"
+BOT = ""
 SP = ""
 DB_SECRET = re.sub(r"\\n", '\n', "")
 ENCRYPT_KEY = re.sub(r"\\n", '\n', "")
