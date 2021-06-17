@@ -8,3 +8,4 @@ loot2.txt
 database/database.db
 *.db
 database/database.db
+config.yml

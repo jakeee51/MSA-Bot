@@ -1,4 +1,4 @@
-import re, os
+import re, os, yaml
 
 class ServerPartition(object):
    #__slots__ = ("name", "wait", "general", "announce")
@@ -8,9 +8,6 @@ class ServerPartition(object):
       self.wait = wait
       self.general = general
       self.announce = announce
-
-__bro_options = {"role_select": 792531850740498482}
-__sis_options = {"role_select": 792531967832227841}
 
 # Update the role-selection listener
 def update_role_select():
@@ -26,24 +23,27 @@ def update_role_select():
             SPLIT_ROLES_EMOJIS[BROTHERS.role_select][emote] = int(role)
             SPLIT_ROLES_EMOJIS[SISTERS.role_select][emote] = int(extra)
 
-
 # Set all global variables
-BROTHERS = ServerPartition("Brother", 748745649746477086,
-                  631090067963772931, 687402472586870849,
+with open("config.yml") as f:
+   data = yaml.load(f, Loader=yaml.FullLoader)
+__bro_options = {"role_select": data["bro_role_select_id"]}
+__sis_options = {"role_select": data["sis_role_select_id"]}
+TEST_MODE = False; ENV = "PROD"; MSA = data["msa"]
+BROTHERS = ServerPartition("Brother", data["bro_wait_id"],
+                  data["bro_general_id"], data["bro_announce_id"],
                   **__bro_options)
-SISTERS = ServerPartition("Sister", 748761869480624158,
-                 748762901531066458, 748764105686384650,
+SISTERS = ServerPartition("Sister", data["sis_wait_id"],
+                 data["sis_general_id"], data["sis_announce_id"],
                  **__sis_options)
-TEST_MODE = False; ENV = "DEV"; MSA = "NJIT"
-EMAIL = ""
-APP_PASS = ""
-BOT = ""
+EMAIL = data["email"]
+APP_PASS = data["app_pass"]
+BOT = data["bot_pass"]
 SP = ""
 DB_SECRET = re.sub(r"\\n", '\n', "")
 ENCRYPT_KEY = re.sub(r"\\n", '\n', "")
 DB_PATH = "database/database.db"
-VERIFY_ID = 688625250832744449
-SERVER_ID = 630888887375364126
+VERIFY_ID = data["verify_id"]
+SERVER_ID = data["server_id"]
 ROLE_EMOJIS = {}
 SPLIT_ROLES_EMOJIS = {BROTHERS.role_select: {},
                       SISTERS.role_select: {}}
@@ -61,7 +61,4 @@ Notes:
   - Right click on #verify chat
   - Right click on #general chat
 - Make @everyone role only able to talk in #verify chat
-
-Make MSA-Bot ready for website automatic setup
-Make website that configures and download zip file of custom MSA bot
 '''
