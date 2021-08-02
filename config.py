@@ -24,7 +24,7 @@ def update_role_select():
             SPLIT_ROLES_EMOJIS[SISTERS.role_select][emote] = int(extra)
 
 # Set all global variables
-with open("config.yml") as f:
+with open("config.yaml") as f:
    data = yaml.load(f, Loader=yaml.FullLoader)
 __bro_options = {"role_select": data["bro_role_select_id"]}
 __sis_options = {"role_select": data["sis_role_select_id"]}

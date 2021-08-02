@@ -9,3 +9,4 @@ database/database.db
 *.db
 database/database.db
 config.yml
+config.yaml

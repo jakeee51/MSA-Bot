@@ -161,17 +161,17 @@ def get_sibling_role(member):
 
 def get_sibling(sibling):
     if sibling == "Brother":
-        return brothers
+        return BROTHERS
     else:
-        return sisters
+        return SISTERS
 
 def listen_announce(msg):
-    if msg.channel.id == brothers.announce:
+    if msg.channel.id == BROTHERS.announce:
         if "@everyone" in msg.content:
-            return sisters.announce
-    elif msg.channel.id == sisters.announce:
+            return SISTERS.announce
+    elif msg.channel.id == SISTERS.announce:
         if "@everyone" in msg.content:
-            return brothers.announce
+            return BROTHERS.announce
     else:
         False
 
@@ -205,10 +205,10 @@ def listen_code(msg):
         return re.search(r"^\d\d\d\d$", msg.content)
 
 def in_general(channel_id):
-    if channel_id == brothers.general:
-        return brothers
-    elif channel_id == sisters.general:
-        return sisters
+    if channel_id == BROTHERS.general:
+        return BROTHERS
+    elif channel_id == SISTERS.general:
+        return SISTERS
     else:
         return False
 
