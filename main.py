@@ -5,7 +5,7 @@ Author: David J. Morfe
 Application Name: MSA-Bot
 Functionality Purpose: An agile Discord Bot to fit any MSA's needs
 '''
-RELEASE = "v0.0.4 - 6/16/21"
+RELEASE = "v0.0.5 - 8/1/21"
 
 
 import re, os, sys, time, json, datetime
@@ -106,10 +106,10 @@ async def on_message(message):
 
     # The Verification System
     if listen_verify(message): # Verify command
-        sid, gender = listen_verify(message)
-        if not re.search(r"^[a-zA-Z]{2,4}\d{0,4}$", sid) or \
+        email, gender = listen_verify(message)
+        if not re.search(r"^.+@.+\.", email) or \
            not re.search(r"^/verify ", str(message.content)) or \
-           sid == '':
+           email == '':
             await message.channel.send("**Invalid command! Please make sure you're typing everything correctly.**", delete_after=25)
             await message.delete(delay=300)
         elif not re.search(r"(Brother|Sister)", gender):
@@ -119,35 +119,50 @@ async def on_message(message):
             await message.channel.send("**Invalid command! NOT your student ID, use your UCID!**", delete_after=25)
             await message.delete(delay=300)
         else:
-            email_addr = ucid.lower() + f"@{MSA}.edu".lower(); ID = message.author.id
-            temp = await message.channel.send(f"**We've sent a verification link to your email at** ___{email_addr}___**, please check your email.**", delete_after=300)
+            email_addr = email.lower()
+            vCode = send_email(email_addr, test=False); ID = message.author.id
+            with open("verify.txt", 'a') as f:
+                f.write(f"{vCode} {email_addr} {ID} {gender}\n")
+            temp = await message.channel.send(f"**We've sent a verification code to your email at** ___{email_addr}___**, please copy & paste it below.**", delete_after=300)
             await message.delete(delay=300)
-            vCode = send_email(email_addr, gender, test=TEST_MODE)
-            result = await send_verify_post({"code": str(vCode)}, test=TEST_MODE)
-            if result == '0':
-                await message.delete(); temp.delete()
-            elif result == '-1':
-                await message.delete(); temp.delete()
-            elif result == vCode:
-                await message.delete(); await temp.delete()
-                # {vCode} {email_addr} {ID} {gender}
-                guild = bot.get_guild(SERVER_ID)
-                role = get(guild.roles, name=f"{gender}s Waiting Room")
-                await message.author.add_roles(role) # Add Waiting Room role to user
-                nName = get_name(email_addr) # New Nick Name
+            try:
+                await asyncio.wait_for(check_verify(f"{vCode} {email_addr}", message, temp), timeout=900) # Purge messages when record is removed from 'verify.txt' otherwise purge in 15 minutes
+            except asyncio.TimeoutError:
                 try:
-                    if nName != None: # Re-name user
-                        await message.author.edit(nick=str(nName))
-                    else:
-                        nName = email_addr
-                        await message.author.edit(nick=str(nName))
-                except errors.Forbidden:
-                    print("Success!\n", nName)
-                sibling = get_sibling(gender) # Get brother/sister object
-                channel = bot.get_channel(sibling.wait) # NJIT MSA #general
-                await channel.send(f"@here ***" + message.author.mention + "***" + f" *has joined the {MSA} MSA Discord!*")
-            else:
-                print("Invalid post request!")
+                    await message.delete(); await temp.delete()
+                except discord.errors.NotFound:
+                    pass
+                edit_file("verify.txt", f"{vCode} {email_addr} {ID} {gender}")
+    elif listen_code(message): # Listen for 4-digit code on the NJIT MSA #verify
+        eCode = listen_code(message)
+        if eCode:
+            with open("verify.txt") as f:
+                lines = f.readlines(); flag = True
+                if len(lines) != 0:
+                    for line in lines:
+                        lst = line.strip('\n').split(' ')
+                        if lst[0] == eCode.group() and lst[2] == str(message.author.id): # Verify code
+                            edit_file("verify.txt", line.strip('\n'))
+                            role = discord.utils.get(client.get_guild(SERVER_ID).roles,
+                                                     name=f"{lst[3]}s Waiting Room")
+                            await message.author.add_roles(role); flag = False
+                            nName = get_name(lst[1])
+                            sibling = get_sibling(lst[3])
+                            await message.delete()
+                            if nName != None:
+                                try:
+                                    await message.author.edit(nick=f"{nName}")
+                                except discord.errors.Forbidden:
+                                    print("Success!")
+                            else:
+                                await message.author.edit(nick=f"{lst[1]}")
+                            channel = client.get_channel(sibling.wait) # NJIT MSA #general
+                            await channel.send(f"@here ***" + message.author.mention + "***" + " *has joined the NJIT MSA Discord!*")
+                        else:
+                            await message.delete(delay=60)
+                    if flag:
+                        temp = await message.channel.send("**Invalid code! Who a u?!**")
+                        await temp.delete(delay=60)
     else: # Delete every other message in #verify in 5 min.
         if message.channel.id == VERIFY_ID:
             if re.search(r"^[a-zA-Z]{2,4}\d{0,4}$", message.content):

@@ -57,7 +57,7 @@ def edit_file(file, value):
         f.truncate()
         return found
 
-def send_email(addr: str, test=False) -> str: # Return 4-digit verification code string
+def send_email(addr: str, gender=None, test=False) -> str: # Return 4-digit verification code string
     sCode = f"{randint(0,9)}{randint(0,9)}{randint(0,9)}{randint(0,9)}"
     if not test:
         msg = EmailMessage()
@@ -192,12 +192,12 @@ def listen_verify(msg):
             request = re.sub(r"/verify ", '', msg.content.lower())
             gender = re.search(r"(brothers?|sis(tas?|ters?))", request) or ''
             if gender:
-                ucid = re.sub(fr"{gender.group()}", '', request).strip(' ')
+                email = re.sub(fr"{gender.group()}", '', request).strip(' ')
                 if gender.group()[0] == 'b':
                     gender = "Brother"
                 else:
                     gender = "Sister"
-                return ucid, gender
+                return email, gender
             return ('', '')
 
 def listen_code(msg):

@@ -26,14 +26,14 @@ def update_role_select():
 # Set all global variables
 with open("config.yaml") as f:
    data = yaml.load(f, Loader=yaml.FullLoader)
-__bro_options = {"role_select": data["bro_role_select_id"]}
-__sis_options = {"role_select": data["sis_role_select_id"]}
+__bro_options = {"role_select": int(data["bro_role_select_id"])}
+__sis_options = {"role_select": int(data["sis_role_select_id"])}
 TEST_MODE = False; ENV = "PROD"; MSA = data["msa"]
-BROTHERS = ServerPartition("Brother", data["bro_wait_id"],
-                  data["bro_general_id"], data["bro_announce_id"],
+BROTHERS = ServerPartition("Brother", int(data["bro_wait_id"]),
+                  int(data["bro_general_id"]), int(data["bro_announce_id"]),
                   **__bro_options)
-SISTERS = ServerPartition("Sister", data["sis_wait_id"],
-                 data["sis_general_id"], data["sis_announce_id"],
+SISTERS = ServerPartition("Sister", int(data["sis_wait_id"]),
+                 int(data["sis_general_id"]), int(data["sis_announce_id"]),
                  **__sis_options)
 EMAIL = data["email"]
 APP_PASS = data["app_pass"]
@@ -42,8 +42,8 @@ SP = ""
 DB_SECRET = re.sub(r"\\n", '\n', "")
 ENCRYPT_KEY = re.sub(r"\\n", '\n', "")
 DB_PATH = "database/database.db"
-VERIFY_ID = data["verify_id"]
-SERVER_ID = data["server_id"]
+VERIFY_ID = int(data["verify_id"])
+SERVER_ID = int(data["server_id"])
 ROLE_EMOJIS = {}
 SPLIT_ROLES_EMOJIS = {BROTHERS.role_select: {},
                       SISTERS.role_select: {}}
