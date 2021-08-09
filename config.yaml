@@ -1,0 +1,14 @@
+app_pass: abc
+bot_pass: abc
+bro_announce_id: 123
+bro_general_id: 123
+bro_role_select_id: 123
+bro_wait_id: 123
+email: abc@gmail.com
+msa: MSA_INITIALS
+server_id: 123
+sis_announce_id: 123
+sis_general_id: 123
+sis_role_select_id: 123
+sis_wait_id: 123
+verify_id: 123
